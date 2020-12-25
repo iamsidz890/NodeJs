@@ -37,20 +37,36 @@
 // npm is installed togther with nodejs.
 // in package.json for custom names use npm run start-server
 ///////////////////////////////////////////////////////EXPRESS////////////////////////////////////////////////////////////
-const http = require("http");
-const express = require("express"); //gives a function e which is basically express
-const app = express(); //express app.....by using function.....lot of logic here
+const path = require("path");
+
+const express = require("express");
+const bodyParser = require("body-parser");
+
+const app = express();
+
+const adminRoutes = require("./routes/admin");
+const shopRoutes = require("./routes/shop");
 ///////////////////////////MIDDLEWARE//////////////////////////////////
+// for parsing middleware
+app.use(bodyParser.urlencoded({ extended: false })); //will pass next by itself
+//  end for parsing middleware
+app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/admin", adminRoutes); //only the routes starting with /admin will be accepted and the path is also changedd
+app.use(shopRoutes);
+
+// if we would  have use in the routes then the order will matter but since we are using get and post then it is specifci and hence the order dosent matters much
+
+// app.use((req, res, next) => {
+// 	console.log("This always runs");
+// 	next();
+// });
+//catch all for undefined paths
 app.use((req, res, next) => {
-	// next is function , that will be passed to this func using express
-	console.log("this is middleware");
-	res.send("<h1>Hello from sec middeware</h1>"); //header will be setted itsef
-	next(); //now  it will move to sec middleware...allows the req to move to next func/
-}); //for every incoming request
-app.use((req, res, next) => {
-	// next is function , that will be passed to this func using express
-	console.log("this is another middleware");
-}); //this will not show as we need to specify and send it to sec
+	res.status(404).sendFile(path.join(__dirname, "views", "404.html"));
+});
 //////////////////////////////////////MIDDLEWARE/////////////////////////
-const server = http.createServer(app);
-server.listen(3000);
+// const server = http.createServer(app);
+// server.listen(3000);
+/////or////
+app.listen(3000);
