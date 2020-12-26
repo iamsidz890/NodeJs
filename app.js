@@ -43,8 +43,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const app = express();
+app.set("view engine", "pug"); //tell express which engine to use...
+app.set("views", "views"); //where to find our views
 
-const adminRoutes = require("./routes/admin");
+const adminData = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 ///////////////////////////MIDDLEWARE//////////////////////////////////
 // for parsing middleware
@@ -52,7 +54,8 @@ app.use(bodyParser.urlencoded({ extended: false })); //will pass next by itself
 //  end for parsing middleware
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/admin", adminRoutes); //only the routes starting with /admin will be accepted and the path is also changedd
+// app.use("/admin", adminRoutes); //only the routes starting with /admin will be accepted and the path is also changedd
+app.use("/admin", adminData.routes); //adminDatta is all exports
 app.use(shopRoutes);
 
 // if we would  have use in the routes then the order will matter but since we are using get and post then it is specifci and hence the order dosent matters much

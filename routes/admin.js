@@ -4,6 +4,8 @@ const router = express.Router();
 const path = require("path");
 const rootDir = require("../util/path");
 
+const products = [];
+
 router.get("/add-product", (req, res, next) => {
 	//path
 	// next is function , that will be passed to this func using express
@@ -21,10 +23,13 @@ router.get("/add-product", (req, res, next) => {
 router.post("/add-product", (req, res, next) => {
 	// we have function here which will execute for products
 	//limit this middlewares execution to post request only...instead of use ...we have to use app.get()
-	console.log(req.body);
+	console.log(req.body); //we have to store this in var
+	products.push({ title: req.body.title });
 	res.redirect("/");
 });
 
-module.exports = router;
+// module.exports = router;
+exports.routes = router;
+exports.products = products;
 
 // instead of app we will use router and this router is getting exported so this willl be registered as  routes in Router
